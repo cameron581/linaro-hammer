@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GCC 1"
-.TH GCC 1 "2013-11-11" "gcc-4.8.3" "GNU"
+.TH GCC 1 "2013-12-02" "gcc-4.8.3" "GNU"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -942,7 +942,7 @@ See \s-1RS/6000\s0 and PowerPC Options.
 \&\-mvis2  \-mno\-vis2  \-mvis3  \-mno\-vis3 
 \&\-mcbcond \-mno\-cbcond 
 \&\-mfmaf  \-mno\-fmaf  \-mpopc  \-mno\-popc 
-\&\-mfix\-at697f\fR
+\&\-mfix\-at697f \-mfix\-ut699\fR
 .Sp
 \&\fI\s-1SPU\s0 Options\fR
 \&\fB\-mwarn\-reloc \-merror\-reloc 
@@ -10654,8 +10654,11 @@ responsible for initializing this register with an appropriate value
 before execution begins.
 .IP "\fB\-mpic\-register=\fR\fIreg\fR" 4
 .IX Item "-mpic-register=reg"
-Specify the register to be used for \s-1PIC\s0 addressing.  The default is R10
-unless stack-checking is enabled, when R9 is used.
+Specify the register to be used for \s-1PIC\s0 addressing.
+For standard \s-1PIC\s0 base case, the default will be any suitable register
+determined by compiler.  For single \s-1PIC\s0 base case, the default is
+\&\fBR9\fR if target is \s-1EABI\s0 based or stack-checking is enabled,
+otherwise the default is \fBR10\fR.
 .IP "\fB\-mpoke\-function\-name\fR" 4
 .IX Item "-mpoke-function-name"
 Write the name of each function into the text section, directly
@@ -18155,10 +18158,10 @@ the rules of the \s-1ABI\s0.
 Set the instruction set, register set, and instruction scheduling parameters
 for machine type \fIcpu_type\fR.  Supported values for \fIcpu_type\fR are
 \&\fBv7\fR, \fBcypress\fR, \fBv8\fR, \fBsupersparc\fR, \fBhypersparc\fR,
-\&\fBleon\fR, \fBsparclite\fR, \fBf930\fR, \fBf934\fR, \fBsparclite86x\fR,
-\&\fBsparclet\fR, \fBtsc701\fR, \fBv9\fR, \fBultrasparc\fR,
-\&\fBultrasparc3\fR, \fBniagara\fR, \fBniagara2\fR, \fBniagara3\fR,
-and \fBniagara4\fR.
+\&\fBleon\fR, \fBleon3\fR, \fBsparclite\fR, \fBf930\fR, \fBf934\fR,
+\&\fBsparclite86x\fR, \fBsparclet\fR, \fBtsc701\fR, \fBv9\fR,
+\&\fBultrasparc\fR, \fBultrasparc3\fR, \fBniagara\fR, \fBniagara2\fR,
+\&\fBniagara3\fR and \fBniagara4\fR.
 .Sp
 Native Solaris and GNU/Linux toolchains also support the value \fBnative\fR,
 which selects the best architecture option for the host processor.
@@ -18177,7 +18180,7 @@ implementations.
 cypress
 .IP "v8" 4
 .IX Item "v8"
-supersparc, hypersparc, leon
+supersparc, hypersparc, leon, leon3
 .IP "sparclite" 4
 .IX Item "sparclite"
 f930, f934, sparclite86x
@@ -18240,10 +18243,11 @@ option \fB\-mcpu=\fR\fIcpu_type\fR does.
 The same values for \fB\-mcpu=\fR\fIcpu_type\fR can be used for
 \&\fB\-mtune=\fR\fIcpu_type\fR, but the only useful values are those
 that select a particular \s-1CPU\s0 implementation.  Those are \fBcypress\fR,
-\&\fBsupersparc\fR, \fBhypersparc\fR, \fBleon\fR, \fBf930\fR, \fBf934\fR,
-\&\fBsparclite86x\fR, \fBtsc701\fR, \fBultrasparc\fR, \fBultrasparc3\fR,
-\&\fBniagara\fR, \fBniagara2\fR, \fBniagara3\fR and \fBniagara4\fR.  With
-native Solaris and GNU/Linux toolchains, \fBnative\fR can also be used.
+\&\fBsupersparc\fR, \fBhypersparc\fR, \fBleon\fR, \fBleon3\fR, \fBf930\fR,
+\&\fBf934\fR, \fBsparclite86x\fR, \fBtsc701\fR, \fBultrasparc\fR,
+\&\fBultrasparc3\fR, \fBniagara\fR, \fBniagara2\fR, \fBniagara3\fR and
+\&\fBniagara4\fR.  With native Solaris and GNU/Linux toolchains, \fBnative\fR
+can also be used.
 .IP "\fB\-mv8plus\fR" 4
 .IX Item "-mv8plus"
 .PD 0
@@ -18318,6 +18322,10 @@ later.
 .IX Item "-mfix-at697f"
 Enable the documented workaround for the single erratum of the Atmel \s-1AT697F\s0
 processor (which corresponds to erratum #13 of the \s-1AT697E\s0 processor).
+.IP "\fB\-mfix\-ut699\fR" 4
+.IX Item "-mfix-ut699"
+Enable the documented workarounds for the floating-point errata and the data
+cache nullify errata of the \s-1UT699\s0 processor.
 .PP
 These \fB\-m\fR options are supported in addition to the above
 on \s-1SPARC\-V9\s0 processors in 64\-bit environments:
